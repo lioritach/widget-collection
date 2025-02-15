@@ -6,6 +6,13 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface Component {
   name: string;
@@ -20,6 +27,7 @@ const SAPUI5Components = () => {
     description: "",
     code: "",
   });
+  const [selectedComponent, setSelectedComponent] = useState<Component | null>(null);
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -39,6 +47,10 @@ const SAPUI5Components = () => {
       title: "Success",
       description: "Component added successfully",
     });
+  };
+
+  const handlePreview = (component: Component) => {
+    setSelectedComponent(component);
   };
 
   return (
@@ -119,7 +131,8 @@ const SAPUI5Components = () => {
               key={index}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="p-6 rounded-xl bg-white shadow-lg border border-gray-200"
+              className="p-6 rounded-xl bg-white shadow-lg border border-gray-200 cursor-pointer transition-all hover:shadow-xl"
+              onClick={() => handlePreview(component)}
             >
               <h3 className="text-xl font-semibold mb-2">{component.name}</h3>
               <p className="text-gray-600 mb-4">{component.description}</p>
@@ -144,6 +157,25 @@ const SAPUI5Components = () => {
             </motion.div>
           )}
         </div>
+
+        {/* Preview Dialog */}
+        <Dialog open={!!selectedComponent} onOpenChange={() => setSelectedComponent(null)}>
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>{selectedComponent?.name} Preview</DialogTitle>
+              <DialogDescription>
+                {selectedComponent?.description}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="mt-4 p-4 bg-white rounded-lg border">
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: selectedComponent?.code || "",
+                }}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
