@@ -3,8 +3,11 @@ import { motion } from "framer-motion";
 import { FrameworkCard } from "@/components/FrameworkCard";
 import { SearchBar } from "@/components/SearchBar";
 import { Code2, Layers, Box } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
+
   const frameworks = [
     {
       name: "SAPUI5",
@@ -25,6 +28,13 @@ const Index = () => {
       icon: <Box className="w-6 h-6" />,
     },
   ];
+
+  const handleFrameworkClick = (framework: string) => {
+    console.log(`Clicked ${framework}`);
+    if (framework === "SAPUI5") {
+      navigate("/sapui5");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -54,7 +64,7 @@ const Index = () => {
             <FrameworkCard
               key={framework.name}
               {...framework}
-              onClick={() => console.log(`Clicked ${framework.name}`)}
+              onClick={() => handleFrameworkClick(framework.name)}
             />
           ))}
         </motion.div>
